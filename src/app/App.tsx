@@ -1,119 +1,131 @@
 import { useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router";
+import { Route, Routes, useLocation, matchPath } from "react-router";
+import { PreviewProvider } from "./PreviewContext";
 import { Layout } from "../components/Layout";
+import { AccountLayout } from "../components/AccountLayout";
 import { HomePage } from "../pages/HomePage";
 import { ExplorePage } from "../pages/ExplorePage";
-import { NotFoundPage, PlaceholderPage } from "../pages/PlaceholderPage";
-
-const upcomingPages = [
-  {
-    path: "/productos/:id",
-    title: "Detalle del producto",
-    description: "Todos los detalles para encontrar tu próximo hallazgo.",
-  },
-  {
-    path: "/registro",
-    title: "Únete a TradeNet",
-    description: "Tu próximo hallazgo empieza con una cuenta.",
-  },
-  {
-    path: "/ingresar",
-    title: "Qué bueno verte de nuevo.",
-    description: "Tu comunidad de compradores y vendedores te espera.",
-  },
-  {
-    path: "/recuperar-acceso",
-    title: "Recupera tu acceso",
-    description: "Vuelve a conectar con tu cuenta.",
-  },
-  {
-    path: "/actualizar-contrasena",
-    title: "Elige una nueva contraseña",
-    description: "Un nuevo comienzo para acceder a tu cuenta.",
-  },
-  {
-    path: "/usuarios/:id",
-    title: "Perfil del vendedor",
-    description: "Conoce a la persona detrás de tus próximos hallazgos.",
-  },
-  {
-    path: "/mi-perfil",
-    title: "Mi perfil",
-    description: "Un espacio para presentarte a la comunidad.",
-  },
-  {
-    path: "/mis-publicaciones",
-    title: "Mis publicaciones",
-    description: "Todo lo que vendes, en un solo lugar.",
-  },
-  {
-    path: "/publicar",
-    title: "Dale una nueva historia.",
-    description:
-      "Publica tus productos nuevos y usados para conectar con compradores en Bolivia.",
-  },
-  {
-    path: "/productos/:id/editar",
-    title: "Editar publicación",
-    description: "Mantén al día los detalles de tu producto.",
-  },
-  {
-    path: "/favoritos",
-    title: "Tus favoritos",
-    description: "Guarda eso que te gustó para encontrarlo de nuevo.",
-  },
-  {
-    path: "/mensajes",
-    title: "Tus conversaciones",
-    description: "Cada buena compra empieza con una conversación.",
-  },
-  {
-    path: "/mensajes/:id",
-    title: "Conversación",
-    description: "Consulta los detalles y acuerda tu próxima compra.",
-  },
-  {
-    path: "/admin/reportes",
-    title: "Revisión de reportes",
-    description: "Un espacio para cuidar a la comunidad TradeNet.",
-  },
-] as const;
+import { ProductPage } from "../pages/ProductPage";
+import { AuthPage } from "../pages/AuthPage";
+import { PublicProfilePage, MyProfilePage } from "../pages/ProfilePage";
+import { PublishPage } from "../pages/PublishPage";
+import { FavoritesPage, ListingsPage } from "../pages/AccountPages";
+import { MessagesPage } from "../pages/MessagesPage";
+import { ModerationPage } from "../pages/ModerationPage";
+import { NotFoundPage } from "../pages/NotFoundPage";
 
 export function App() {
   const { pathname } = useLocation();
-
+  const pages = [
+    { path: "/", title: "Compra y vende en Bolivia", element: <HomePage /> },
+    { path: "/explorar", title: "Explorar", element: <ExplorePage /> },
+    {
+      path: "/productos/:id",
+      title: "Detalle del producto",
+      element: <ProductPage key={pathname} />,
+    },
+    {
+      path: "/registro",
+      title: "Crear cuenta",
+      element: <AuthPage kind="register" key="register" />,
+    },
+    {
+      path: "/ingresar",
+      title: "Ingresar",
+      element: <AuthPage kind="login" key="login" />,
+    },
+    {
+      path: "/recuperar-acceso",
+      title: "Recuperar acceso",
+      element: <AuthPage kind="recover" key="recover" />,
+    },
+    {
+      path: "/actualizar-contrasena",
+      title: "Actualizar contraseña",
+      element: <AuthPage kind="password" key="password" />,
+    },
+    {
+      path: "/usuarios/:id",
+      title: "Perfil del vendedor",
+      element: <PublicProfilePage />,
+    },
+    {
+      path: "/mi-perfil",
+      title: "Mi perfil",
+      element: (
+        <AccountLayout>
+          <MyProfilePage />
+        </AccountLayout>
+      ),
+    },
+    {
+      path: "/mis-publicaciones",
+      title: "Mis publicaciones",
+      element: (
+        <AccountLayout>
+          <ListingsPage />
+        </AccountLayout>
+      ),
+    },
+    {
+      path: "/publicar",
+      title: "Publicar producto",
+      element: <PublishPage key={pathname} />,
+    },
+    {
+      path: "/productos/:id/editar",
+      title: "Editar publicación",
+      element: <PublishPage key={pathname} />,
+    },
+    {
+      path: "/favoritos",
+      title: "Favoritos",
+      element: (
+        <AccountLayout>
+          <FavoritesPage />
+        </AccountLayout>
+      ),
+    },
+    {
+      path: "/mensajes",
+      title: "Mensajes",
+      element: (
+        <AccountLayout>
+          <MessagesPage />
+        </AccountLayout>
+      ),
+    },
+    {
+      path: "/mensajes/:id",
+      title: "Conversación",
+      element: (
+        <AccountLayout>
+          <MessagesPage />
+        </AccountLayout>
+      ),
+    },
+    {
+      path: "/admin/reportes",
+      title: "Moderación",
+      element: <ModerationPage />,
+    },
+  ];
+  const title =
+    pages.find((page) => matchPath({ path: page.path, end: true }, pathname))
+      ?.title ?? "Página no encontrada";
   useEffect(() => {
-    const match = upcomingPages.find((page) =>
-      new RegExp(`^${page.path.replace(/:[^/]+/g, "[^/]+")}/?$`).test(pathname),
-    );
-    const title =
-      pathname === "/"
-        ? "Compra y vende en Bolivia"
-        : pathname === "/explorar"
-          ? "Explorar"
-          : (match?.title ?? "Página no encontrada");
     document.title = `${title} · TradeNet`;
-  }, [pathname]);
-
+  }, [title]);
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route path="explorar" element={<ExplorePage />} />
-        {upcomingPages.map((page) => (
-          <Route
-            key={page.path}
-            path={page.path}
-            element={
-              <PlaceholderPage
-                title={page.title}
-                description={page.description}
-              />
-            }
-          />
-        ))}
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
+    <PreviewProvider>
+      <Routes>
+        <Route element={<Layout />}>
+          {pages.map((page) => (
+            <Route key={page.path} path={page.path} element={page.element} />
+          ))}
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </PreviewProvider>
   );
 }

@@ -2,8 +2,12 @@ import { Link } from "react-router";
 import { categories } from "../config/market";
 import { Icon } from "../components/Icon";
 import { SearchForm } from "../components/SearchForm";
+import { usePreview } from "../app/usePreview";
+import { ProductCard } from "../components/ProductCard";
+import { DataState } from "../components/Ui";
 
 export function HomePage() {
+  const { availableProducts } = usePreview();
   return (
     <div className="container home-page">
       <section className="hero">
@@ -96,6 +100,27 @@ export function HomePage() {
             </Link>
           ))}
         </div>
+      </section>
+      <section className="recent-section" aria-labelledby="recent-heading">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">NUEVAS OPORTUNIDADES</p>
+            <h2 id="recent-heading">Recién llegados a TradeNet</h2>
+          </div>
+          <Link className="text-link" to="/explorar">
+            Ver todos <Icon name="arrow" size={18} />
+          </Link>
+        </div>
+        <DataState>
+          <div className="product-grid">
+            {availableProducts.slice(0, 4).map((product) => (
+              <ProductCard product={product} key={product.id} />
+            ))}
+          </div>
+        </DataState>
+        <p className="section-footnote">
+          Selección ilustrativa con precios y productos de ejemplo.
+        </p>
       </section>
       <section className="start-banner">
         <div>

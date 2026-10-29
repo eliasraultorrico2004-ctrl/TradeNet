@@ -4,7 +4,7 @@ Marketplace web en español, desarrollado en este repositorio desde VS Code con 
 
 ## Estado del proyecto
 
-La **fase 2: base del proyecto** incorpora React, TypeScript, Vite y React Router. El `index.html` ahora carga la aplicación React. Todavía no hay conexión con Supabase.
+La **fase 3: interfaz del marketplace** completa las pantallas sobre React, TypeScript, Vite y React Router. Incluye una demostración interactiva con datos ficticios. Todavía no hay conexión con Supabase.
 
 La primera versión permitirá explorar productos físicos nuevos y usados, crear una cuenta, publicar artículos y conversar con vendedores para acordar una compra. El lanzamiento será en **Bolivia**, con precios en **bolivianos (BOB)**.
 
@@ -52,10 +52,12 @@ npm run preview
 
 ```text
 src/
-  app/          Rutas y composición de la aplicación
-  components/   Navegación, iconos y formulario de búsqueda
+  app/          Rutas y estado temporal de la demostración
+  components/   Navegación, productos, formularios y estados compartidos
   config/       Mercado boliviano y categorías iniciales
-  pages/        Inicio, explorar y páginas pendientes
+  data/         Productos, perfiles y conversaciones ficticios
+  lib/          Filtros, importes, imágenes y destinos internos
+  pages/        Pantallas del marketplace y del espacio personal
   styles/       Estilos compartidos y adaptación a celular
 public/         Recursos estáticos
 docs/           Alcance y registro de las fases
@@ -64,10 +66,18 @@ docs/           Alcance y registro de las fases
 ## Qué funciona en esta fase
 
 - Navegación por todas las rutas de la fase 1 y página para direcciones desconocidas.
-- Inicio y catálogo base adaptables a celular y computadora.
-- Búsqueda y categoría conservadas en la URL, con opción de limpiar filtros. El catálogo todavía no consulta productos.
+- Inicio, catálogo, detalle y galería de productos adaptables a celular y computadora, con ilustraciones propias de ejemplo.
+- Búsqueda sin distinguir tildes ni mayúsculas, filtros por categoría, ciudad, condición y precio, y ordenamiento. Los parámetros se conservan en la URL; se aplican a los datos ficticios.
+- Formularios de ingreso, registro y recuperación, con validación y avisos claros de que no operan sobre cuentas reales.
+- Perfil público y edición de nombre e imagen de la cuenta de ejemplo.
+- Creación y edición de publicaciones locales con fotos y vista previa, pausa, reactivación, venta y eliminación con confirmación.
+- Favoritos, bandeja de conversaciones y envío de mensajes locales de ejemplo.
+- Vista de moderación con reportes ficticios, ocultamiento y restauración de publicaciones.
+- Selector de estados de carga, vacío y error en las pantallas con contenido, para revisar el diseño.
 - Configuración centralizada para Bolivia, BOB y productos nuevos y usados.
 
-Las pantallas de cuentas, productos, publicaciones, favoritos, mensajes y moderación muestran avisos de próxima disponibilidad. No realizan operaciones ni ofrecen acceso a datos privados. Las sesiones, la protección real de rutas, los permisos y la persistencia se implementarán con Supabase en las fases correspondientes.
+**Los datos y las operaciones de esta fase son de demostración.** No se guardan en una base de datos ni en el almacenamiento del navegador. Los cambios, fotos elegidas y mensajes se pierden al recargar o cerrar la página. Los formularios de cuentas no envían correos, no validan credenciales ni crean cuentas; usa datos ficticios para revisarlos.
 
-El detalle de esta entrega está en [docs/fase-2-base.md](docs/fase-2-base.md).
+El menú «Mi espacio» permite recorrer las pantallas de ejemplo. En ingreso y registro, «Abrir cuenta de ejemplo» muestra la navegación de la cuenta sin simular una autenticación real. La vista de moderación también es pública para revisión: no constituye control de acceso. Las sesiones, los permisos y la persistencia se implementarán con Supabase en las fases correspondientes.
+
+Los detalles de las entregas están en [fase 2](docs/fase-2-base.md) y [fase 3](docs/fase-3-interfaz.md). La siguiente fase es preparar los datos, archivos y permisos de Supabase.
