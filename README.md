@@ -4,7 +4,7 @@ Marketplace web en español, desarrollado en este repositorio desde VS Code con 
 
 ## Estado del proyecto
 
-La **fase 3: interfaz del marketplace** completa las pantallas sobre React, TypeScript, Vite y React Router. Incluye una demostración interactiva con datos ficticios. Todavía no hay conexión con Supabase.
+La **fase 4: infraestructura de Supabase** ya está aplicada y verificada en el proyecto remoto: tablas, RLS, almacenamiento privado y cliente tipado. La interfaz de la fase 3 sigue funcionando como demostración local hasta conectar las cuentas y las operaciones en las siguientes fases.
 
 La primera versión permitirá explorar productos físicos nuevos y usados, crear una cuenta, publicar artículos y conversar con vendedores para acordar una compra. El lanzamiento será en **Bolivia**, con precios en **bolivianos (BOB)**.
 
@@ -36,7 +36,7 @@ npm run dev
 
 Abrir la dirección que muestra Vite: normalmente `http://127.0.0.1:5173`. Ese puerto se mantiene fijo; si está ocupado, se debe liberar antes de iniciar. Para detener el servidor, pulsa `Ctrl+C` en su terminal.
 
-La base funciona sin credenciales. `.env.example` documenta las variables públicas previstas para Supabase en la fase 4; no es necesario completarlas todavía. Los archivos `.env` se excluyen de Git y nunca deben contener claves secretas con prefijo `VITE_`, porque ese prefijo expone valores al navegador.
+La demostración funciona sin credenciales. Para usar el cliente real, `.env.example` documenta `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY`; los valores de este entorno están en `.env.local`, excluido de Git. Los archivos `.env` nunca deben contener claves secretas con prefijo `VITE_`, porque ese prefijo expone valores al navegador. No se usa `EXPO_PUBLIC_` en esta aplicación web.
 
 ## Comprobaciones
 
@@ -44,9 +44,14 @@ La base funciona sin credenciales. `.env.example` documenta las variables públi
 npm run typecheck
 npm run build
 npm run preview
+npm run test:db
+npm run test:config
+npm run supabase:check
 ```
 
 `build` comprueba los tipos y genera `dist/`. `preview` permite revisar esa compilación localmente. Al alojar la aplicación, el servidor debe redirigir las rutas de la aplicación hacia `index.html`, para que funcionen al abrir enlaces directos o recargar.
+
+`test:db` comprueba las migraciones y permisos en PostgreSQL en memoria, sin tocar el proyecto remoto. `test:config` valida la configuración pública. `supabase:check` necesita acceso a Internet y comprueba la API real sin escribir datos; no imprime claves.
 
 ## Estructura
 
@@ -60,6 +65,8 @@ src/
   pages/        Pantallas del marketplace y del espacio personal
   styles/       Estilos compartidos y adaptación a celular
 public/         Recursos estáticos
+supabase/       Migraciones aplicadas y contratos de pruebas SQL
+scripts/        Comprobaciones de base de datos, configuración y conexión
 docs/           Alcance y registro de las fases
 ```
 
@@ -78,6 +85,6 @@ docs/           Alcance y registro de las fases
 
 **Los datos y las operaciones de esta fase son de demostración.** No se guardan en una base de datos ni en el almacenamiento del navegador. Los cambios, fotos elegidas y mensajes se pierden al recargar o cerrar la página. Los formularios de cuentas no envían correos, no validan credenciales ni crean cuentas; usa datos ficticios para revisarlos.
 
-El menú «Mi espacio» permite recorrer las pantallas de ejemplo. En ingreso y registro, «Abrir cuenta de ejemplo» muestra la navegación de la cuenta sin simular una autenticación real. La vista de moderación también es pública para revisión: no constituye control de acceso. Las sesiones, los permisos y la persistencia se implementarán con Supabase en las fases correspondientes.
+El menú «Mi espacio» permite recorrer las pantallas de ejemplo. En ingreso y registro, «Abrir cuenta de ejemplo» muestra la navegación de la cuenta sin simular una autenticación real. La vista de moderación también es pública para revisión: no constituye control de acceso. Los permisos del backend real ya están preparados; las sesiones y las operaciones de la interfaz se conectarán en las fases correspondientes.
 
-Los detalles de las entregas están en [fase 2](docs/fase-2-base.md) y [fase 3](docs/fase-3-interfaz.md). La siguiente fase es preparar los datos, archivos y permisos de Supabase.
+Los detalles de las entregas están en [fase 2](docs/fase-2-base.md), [fase 3](docs/fase-3-interfaz.md) y [fase 4](docs/fase-4-supabase.md). La siguiente fase es conectar las cuentas y perfiles reales a Supabase.
